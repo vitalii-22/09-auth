@@ -1,5 +1,5 @@
-import axios from "axios";
-import type { NewNoteData, Note } from "../../types/note";
+import type { NewNoteData, Note, User } from "../../types/note";
+import { nextServerApi, SessionResponse } from "./api";
 
 const myToken = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
@@ -8,25 +8,32 @@ interface FetchNotesResponse {
   totalPages: number;
 }
 
+export interface RegisterRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
 export const fetchNotes = async (
   page: number,
   params: string = "",
   tag?: string
 ): Promise<FetchNotesResponse> => {
-  const response = await axios.get<FetchNotesResponse>(
-    `https://notehub-public.goit.study/api/notes?`,
-    {
-      params: {
-        page,
-        perPage: 12,
-        ...(params.trim() !== "" && { search: params }),
-        tag: tag,
-      },
-      headers: {
-        Authorization: `Bearer ${myToken}`,
-      },
-    }
-  );
+  const response = await nextServerApi.get<FetchNotesResponse>("/notes", {
+    params: {
+      page,
+      perPage: 12,
+      ...(params.trim() !== "" && { search: params }),
+      tag: tag,
+    },
+    headers: {
+      Authorization: `Bearer ${myToken}`,
+    },
+  });
 
   console.log(response.data);
 
@@ -34,38 +41,52 @@ export const fetchNotes = async (
 };
 
 export const createNote = async (noteData: NewNoteData): Promise<Note> => {
-  const response = await axios.post<Note>(
-    `https://notehub-public.goit.study/api/notes?`,
-    noteData,
-    {
-      headers: {
-        Authorization: `Bearer ${myToken}`,
-      },
-    }
-  );
+  const response = await nextServerApi.post<Note>(`/notes`, noteData, {
+    headers: {
+      Authorization: `Bearer ${myToken}`,
+    },
+  });
   return response.data;
 };
 
-export const deleteNote = async (noteId: string): Promise<Note> => {
-  const response = await axios.delete<Note>(
-    `https://notehub-public.goit.study/api/notes/${noteId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${myToken}`,
-      },
-    }
-  );
-  return response.data;
-};
+// export const deleteNote = async (noteId: string): Promise<Note> => {
+//   const response = await axios.delete<Note>(`/notes/${noteId}`, {
+//     headers: {
+//       Authorization: `Bearer ${myToken}`,
+//     },
+//   });
+//   return response.data;
+// };
 
 export const fetchNoteById = async (id: string): Promise<Note> => {
-  const res = await axios.get<Note>(
-    `https://notehub-public.goit.study/api/notes/${id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${myToken}`,
-      },
-    }
-  );
+  const res = await nextServerApi.get<Note>(`/notes/${id}`, {
+    headers: {
+      Authorization: `Bearer ${myToken}`,
+    },
+  });
   return res.data;
+};
+
+export const register = async (data: RegisterRequest) => {
+  const res = await nextServerApi.post<User>("/auth/register", data);
+  return res.data;
+};
+
+export const login = async (data: LoginRequest) => {
+  const res = await nextServerApi.post<User>("/auth/login", data);
+  return res.data;
+};
+
+export const checkSession = async () => {
+  const res = await nextServerApi.get<SessionResponse>("/auth/session");
+  return res.data.success;
+};
+
+export const getMe = async () => {
+  const { data } = await nextServerApi.get<User>("/users/me");
+  return data;
+};
+
+export const logout = async (): Promise<void> => {
+  await nextServerApi.post("/auth/logout");
 };

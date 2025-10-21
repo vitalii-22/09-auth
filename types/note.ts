@@ -12,3 +12,9 @@ export interface NewNoteData {
   content?: string;
   tag: "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
 }
+
+export interface User {
+  email: string;
+  username: string;
+  avatar: string;
+}
