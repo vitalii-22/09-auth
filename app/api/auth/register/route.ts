@@ -6,7 +6,6 @@ import { cookies } from "next/headers";
 export async function POST(req: NextRequest) {
   const body = await req.json();
   try {
-    console.log("Sending register request:", body);
     const apiRes = await api.post("auth/register", body);
     const cookieStore = await cookies();
     const setCookie = apiRes.headers["set-cookie"];

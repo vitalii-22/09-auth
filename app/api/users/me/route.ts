@@ -24,3 +24,28 @@ export async function GET() {
     );
   }
 }
+
+export async function PATCH(request: Request) {
+  const cookieStore = await cookies();
+  const body = await request.json();
+  try {
+    const { data } = await api.patch("/users/me", body, {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    });
+
+    console.log(body);
+
+    return NextResponse.json(request);
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error:
+          (error as ApiError).response?.data?.error ??
+          (error as ApiError).message,
+      },
+      { status: (error as ApiError).status }
+    );
+  }
+}

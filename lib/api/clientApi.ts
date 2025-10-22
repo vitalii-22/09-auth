@@ -18,6 +18,10 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface UpdateUserRequest {
+  userName?: string;
+}
+
 export const fetchNotes = async (
   page: number,
   params: string = "",
@@ -30,12 +34,7 @@ export const fetchNotes = async (
       ...(params.trim() !== "" && { search: params }),
       tag: tag,
     },
-    headers: {
-      Authorization: `Bearer ${myToken}`,
-    },
   });
-
-  console.log(response.data);
 
   return response.data;
 };
@@ -83,10 +82,15 @@ export const checkSession = async () => {
 };
 
 export const getMe = async () => {
-  const { data } = await nextServerApi.get<User>("/users/me");
-  return data;
+  const res = await nextServerApi.get<User>("/users/me");
+  return res.data;
 };
 
 export const logout = async (): Promise<void> => {
   await nextServerApi.post("/auth/logout");
+};
+
+export const updateMe = async (payload: UpdateUserRequest) => {
+  const res = await nextServerApi.patch<User>("/users/me", payload);
+  return res.data;
 };

@@ -1,5 +1,7 @@
 import { getServerMe } from "@/lib/api/serverApi";
 import css from "./Profile.module.css";
+import Link from "next/link";
+import Image from "next/image";
 
 export default async function Profile() {
   const user = await getServerMe();
@@ -9,18 +11,18 @@ export default async function Profile() {
       <div className={css.profileCard}>
         <div className={css.header}>
           <h1 className={css.formTitle}>Profile Page</h1>
-          {/* <a src="" className={css.editProfileButton}>
+          <Link href="/profile/edit" className={css.editProfileButton}>
             Edit Profile
-          </a> */}
+          </Link>
         </div>
         <div className={css.avatarWrapper}>
-          {/* <img
-            src="User Avatar"
+          <Image
+            src={user.avatar}
             alt="User Avatar"
             width={120}
             height={120}
             className={css.avatar}
-          /> */}
+          />
         </div>
         <div className={css.profileInfo}>
           <p>Username: {user.username}</p>
