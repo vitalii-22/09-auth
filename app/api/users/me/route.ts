@@ -37,7 +37,7 @@ export async function PATCH(request: Request) {
 
     console.log(body);
 
-    return NextResponse.json(request);
+    return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(
       {

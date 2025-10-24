@@ -8,6 +8,11 @@ interface FetchNotesResponse {
   totalPages: number;
 }
 
+interface NotesRequest {
+  categoryId?: string;
+  title?: string;
+}
+
 export interface RegisterRequest {
   email: string;
   password: string;
@@ -22,21 +27,11 @@ export interface UpdateUserRequest {
   userName?: string;
 }
 
-export const fetchNotes = async (
-  page: number,
-  params: string = "",
-  tag?: string
-): Promise<FetchNotesResponse> => {
-  const response = await nextServerApi.get<FetchNotesResponse>("/notes", {
-    params: {
-      page,
-      perPage: 12,
-      ...(params.trim() !== "" && { search: params }),
-      tag: tag,
-    },
+export const fetchNotes = async (params?: NotesRequest) => {
+  const { data } = await nextServerApi.get<FetchNotesResponse>("/notes", {
+    params,
   });
-
-  return response.data;
+  return data.notes;
 };
 
 export const createNote = async (noteData: NewNoteData): Promise<Note> => {
