@@ -28,9 +28,15 @@ function NotesClient({ initialData, tag }: NotesClientProps) {
   const [inputValue, setInputValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
+  const requestParams = {
+    currentPage: currentPage,
+    searchQuery: tag === "all" ? undefined : tag,
+    title: searchQuery,
+  };
+
   const { data, isSuccess } = useQuery({
     queryKey: ["notes", currentPage, searchQuery, tag],
-    queryFn: () => fetchNotes(currentPage, searchQuery, tag),
+    queryFn: () => fetchNotes(requestParams),
     placeholderData: keepPreviousData,
     initialData,
   });

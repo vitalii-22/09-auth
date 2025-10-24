@@ -31,7 +31,7 @@ export const fetchNotes = async (params?: NotesRequest) => {
   const { data } = await nextServerApi.get<FetchNotesResponse>("/notes", {
     params,
   });
-  return data.notes;
+  return data;
 };
 
 export const createNote = async (noteData: NewNoteData): Promise<Note> => {
