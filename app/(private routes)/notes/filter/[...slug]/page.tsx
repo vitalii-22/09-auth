@@ -2,6 +2,7 @@ import { fetchNotes } from "@/lib/api/clientApi";
 
 import NotesClient from "./Notes.client";
 import { Metadata } from "next";
+import { cookies } from "next/headers";
 
 type NotesPageProps = {
   params: Promise<{ slug: string[] }>;

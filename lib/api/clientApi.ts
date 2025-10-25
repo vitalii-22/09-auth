@@ -3,13 +3,14 @@ import { nextServerApi, SessionResponse } from "./api";
 
 const myToken = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
-interface FetchNotesResponse {
+export interface FetchNotesResponse {
   notes: Note[];
   totalPages: number;
 }
 
-interface NotesRequest {
-  categoryId?: string;
+export interface NotesRequest {
+  page: number;
+  tag?: string;
   title?: string;
 }
 

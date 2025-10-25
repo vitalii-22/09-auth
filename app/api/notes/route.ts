@@ -14,10 +14,10 @@ export async function GET(request: NextRequest) {
 
     const res = await api("/notes", {
       params: {
-        ...(search !== "" && { search }),
         page,
-        perPage: 12,
+        ...(search !== "" && { search }),
         ...(tag && { tag }),
+        perPage: 12,
       },
       headers: {
         Cookie: cookieStore.toString(),
