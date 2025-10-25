@@ -1,17 +1,15 @@
 import type { NewNoteData, Note, User } from "../../types/note";
 import { nextServerApi, SessionResponse } from "./api";
 
-const myToken = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
-
 export interface FetchNotesResponse {
   notes: Note[];
   totalPages: number;
 }
 
 export interface NotesRequest {
-  page: number;
+  searchQuery?: string;
+  currentPage?: number;
   tag?: string;
-  title?: string;
 }
 
 export interface RegisterRequest {
@@ -25,40 +23,44 @@ export interface LoginRequest {
 }
 
 export interface UpdateUserRequest {
+  userEmail?: string;
   userName?: string;
 }
 
-export const fetchNotes = async (params?: NotesRequest) => {
-  const { data } = await nextServerApi.get<FetchNotesResponse>("/notes", {
-    params,
-  });
-  return data;
-};
+export interface NotesRequest {
+  searchQuery?: string;
+  currentPage?: number;
+  tag?: string;
+}
 
-export const createNote = async (noteData: NewNoteData): Promise<Note> => {
-  const response = await nextServerApi.post<Note>(`/notes`, noteData, {
-    headers: {
-      Authorization: `Bearer ${myToken}`,
+export const fetchNotes = async ({
+  searchQuery,
+  currentPage,
+  tag,
+}: NotesRequest) => {
+  const response = await nextServerApi.get<FetchNotesResponse>("/notes", {
+    params: {
+      ...(searchQuery !== "" && { search: searchQuery }),
+      page: currentPage,
+      perPage: 12,
+      ...(tag && { tag }),
     },
   });
   return response.data;
 };
 
-// export const deleteNote = async (noteId: string): Promise<Note> => {
-//   const response = await axios.delete<Note>(`/notes/${noteId}`, {
-//     headers: {
-//       Authorization: `Bearer ${myToken}`,
-//     },
-//   });
-//   return response.data;
-// };
+export const createNote = async (noteData: NewNoteData): Promise<Note> => {
+  const response = await nextServerApi.post<Note>(`/notes`, noteData);
+  return response.data;
+};
+
+export const deleteNote = async (id: string): Promise<Note> => {
+  const response = await nextServerApi.delete<Note>(`/notes/${id}`);
+  return response.data;
+};
 
 export const fetchNoteById = async (id: string): Promise<Note> => {
-  const res = await nextServerApi.get<Note>(`/notes/${id}`, {
-    headers: {
-      Authorization: `Bearer ${myToken}`,
-    },
-  });
+  const res = await nextServerApi.get<Note>(`/notes/${id}`);
   return res.data;
 };
 

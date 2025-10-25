@@ -24,7 +24,7 @@ export default function EditProfile() {
 
   const handleSaveUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await updateMe({ userName });
+    await updateMe({ userEmail, userName });
   };
 
   return (
@@ -32,18 +32,17 @@ export default function EditProfile() {
       <div className={css.profileCard}>
         <h1 className={css.formTitle}>Edit Profile</h1>
 
-        <Image
-          src={userAvatar}
-          alt="User Avatar"
-          width={120}
-          height={120}
-          className={css.avatar}
-        />
+        {userAvatar ? (
+          <Image src={userAvatar} alt={userName} width={100} height={100} />
+        ) : (
+          <p>Not avatar</p>
+        )}
 
         <form onSubmit={handleSaveUser} className={css.profileInfo}>
           <div className={css.usernameWrapper}>
             <label htmlFor="username">Username: {userName}</label>
             <input
+              value={userName}
               onChange={handleChange}
               id="username"
               type="text"

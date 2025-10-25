@@ -10,7 +10,7 @@ import SearchBox from "@/components/SearchBox/SearchBox";
 import Pagination from "@/components/Pagination/Pagination";
 import NoteList from "@/components/NoteList/NoteList";
 import { Note } from "@/types/note";
-import { fetchNotes } from "@/lib/api/serverApi";
+import { fetchNotes } from "@/lib/api/clientApi";
 import Link from "next/link";
 
 interface FetchNotesResponse {
@@ -30,7 +30,7 @@ function NotesClient({ initialData, tag }: NotesClientProps) {
 
   const { data, isSuccess } = useQuery({
     queryKey: ["notes", currentPage, searchQuery, tag],
-    queryFn: () => fetchNotes(currentPage, searchQuery, tag),
+    queryFn: () => fetchNotes({ currentPage, searchQuery, tag }),
     placeholderData: keepPreviousData,
     initialData,
   });
