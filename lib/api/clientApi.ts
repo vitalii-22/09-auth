@@ -23,8 +23,8 @@ export interface LoginRequest {
 }
 
 export interface UpdateUserRequest {
-  userEmail?: string;
-  userName?: string;
+  email?: string;
+  username?: string;
 }
 
 export interface NotesRequest {

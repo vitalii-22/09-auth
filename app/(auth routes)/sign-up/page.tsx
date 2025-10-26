@@ -17,7 +17,6 @@ export default function SignUp() {
       const formValues = Object.fromEntries(
         formData
       ) as unknown as RegisterRequest;
-      console.log(formValues);
       const res = await register(formValues);
       if (res) {
         setUser(res);

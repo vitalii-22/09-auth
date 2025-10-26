@@ -2,7 +2,6 @@ import { fetchNotes } from "@/lib/api/serverApi";
 
 import NotesClient from "./Notes.client";
 import { Metadata } from "next";
-import { cookies } from "next/headers";
 
 type NotesPageProps = {
   params: Promise<{ slug: string[] }>;
@@ -18,7 +17,7 @@ export async function generateMetadata({
     openGraph: {
       title: `Note filter: ${slug[0]}`,
       description: `Notes from the category ${slug[0]}`,
-      url: "https://08-zustand-silk.vercel.app/",
+      url: "https://09-auth-beige-chi.vercel.app/",
       images: [
         {
           url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",

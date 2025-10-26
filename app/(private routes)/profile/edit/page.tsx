@@ -4,8 +4,15 @@ import css from "./EditProfilePage.module.css";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getMe, updateMe } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/store/authStore";
+import { useRouter } from "next/navigation";
+import { ApiError } from "@/app/api/api";
 
 export default function EditProfile() {
+  const router = useRouter();
+  const setUser = useAuthStore((state) => state.setUser);
+  const [error, setError] = useState("");
+
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userAvatar, setUserAvatar] = useState("");
@@ -24,7 +31,26 @@ export default function EditProfile() {
 
   const handleSaveUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await updateMe({ userEmail, userName });
+    try {
+      const res = await updateMe({ email: userEmail, username: userName });
+
+      if (res) {
+        setUser(res);
+        router.push("/profile");
+      } else {
+        setError("Oops... some erro");
+      }
+    } catch (error) {
+      setError(
+        (error as ApiError).response?.data?.error ??
+          (error as ApiError).message ??
+          "Oops... some error"
+      );
+    }
+  };
+
+  const handleCancelBtn = () => {
+    router.push("/profile");
   };
 
   return (
@@ -56,7 +82,11 @@ export default function EditProfile() {
             <button type="submit" className={css.saveButton}>
               Save
             </button>
-            <button type="button" className={css.cancelButton}>
+            <button
+              onClick={handleCancelBtn}
+              type="button"
+              className={css.cancelButton}
+            >
               Cancel
             </button>
           </div>
