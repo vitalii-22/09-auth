@@ -27,12 +27,6 @@ export interface UpdateUserRequest {
   username?: string;
 }
 
-export interface NotesRequest {
-  searchQuery?: string;
-  currentPage?: number;
-  tag?: string;
-}
-
 export const fetchNotes = async ({
   searchQuery,
   currentPage,

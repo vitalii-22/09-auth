@@ -14,8 +14,8 @@ export async function GET(request: NextRequest) {
 
     const res = await api("/notes", {
       params: {
-        page,
         ...(search !== "" && { search }),
+        page,
         ...(tag && { tag }),
         perPage: 12,
       },
